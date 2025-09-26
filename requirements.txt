@@ -1,0 +1,8 @@
+requests
+aiohttp
+asyncio
+bs4
+lxml
+requests
+beautifulsoup4
+m3u8
