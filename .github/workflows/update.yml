@@ -20,13 +20,11 @@ jobs:
         python-version: '3.11'
         
     - name: Install dependencies
-      working-directory: ./m3u
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
     - name: Run scrapers
-      working-directory: ./m3u
       run: |
         python "Amazon Prime.py"
         python "Blutv.py"
