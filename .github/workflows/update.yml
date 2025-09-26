@@ -1,0 +1,55 @@
+name: Update M3U Files
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0,12 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      working-directory: ./m3u
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run scrapers
+      working-directory: ./m3u
+      run: |
+        python "Amazon Prime.py"
+        python "Blutv.py"
+        python "Disney+.py"
+        python "Exxen.py"
+        python "Gain.py"
+        python "HBO Max.py"
+        python "Hulu.py"
+        python "Netflix.py"
+        python "Paramount+.py"
+        python "TOD TV.py"
+        python "Unutulmaz Diziler.py"
+
+    - name: Prepare commit (repo root)
+      run: |
+        git status --porcelain
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add m3u/*.m3u || true
+        git commit -m "Auto update M3U files" -a || echo "No changes to commit"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
